@@ -93,31 +93,40 @@ function TypeFilter({ types, selectedType, setSelectedType }) {
   );
 }
 
+// UPDATED: Final design for PreferenceList
 function PreferenceList({ title, preferences, choicesMap }) {
   if (!preferences || !preferences.liked || !preferences.disliked) return null;
 
-  const PreferenceRow = ({ choiceId, isLiked }) => {
-    const choiceData = choicesMap[choiceId];
-    if (!choiceData) return null;
+  const PreferenceItems = ({ ids, isLiked }) => {
+    const likedTextColor = 'text-sky-700';
+    const dislikedTextColor = 'text-red-700';
+    const cardBgColor = isLiked ? 'bg-sky-100' : 'bg-red-100';
 
-    const { choice, location } = choiceData;
-    const isCommon = location === "어디서나";
-    
-    const choiceColor = isLiked ? 'bg-sky-100 border-sky-200 text-sky-800' : 'bg-red-100 border-red-200 text-red-800';
-
-    if (isCommon) {
-      return (
-        <div className="flex items-center gap-2">
-            <span className={`px-3 py-1 ${choiceColor} border rounded-full text-sm font-semibold`}>{choice}</span>
-        </div>
-      );
-    }
-
+    // FIXED: Changed to flex-wrap for horizontal layout
     return (
-      <div className="flex items-center gap-2">
-        <span className="px-3 py-1 bg-white border border-neutral-300 rounded-full text-sm font-semibold text-neutral-700">{location}</span>
-        <span className="text-neutral-400">→</span>
-        <span className={`px-3 py-1 ${choiceColor} border rounded-full text-sm font-semibold`}>{choice}</span>
+      <div className="flex flex-wrap gap-2">
+        {ids.map(id => {
+          const choiceData = choicesMap[id];
+          if (!choiceData) return null;
+
+          const { choice, location } = choiceData;
+          const isCommon = location === "어디서나";
+
+          if (isCommon) {
+            return (
+              <div key={id} className={`p-3 ${cardBgColor} rounded-lg`}>
+                <p className={`text-md font-bold ${isLiked ? likedTextColor : dislikedTextColor}`}>{choice}</p>
+              </div>
+            );
+          }
+
+          return (
+            <div key={id} className={`p-3 ${cardBgColor} rounded-lg`}>
+              <p className="text-sm font-semibold text-neutral-500">{location}</p>
+              <p className={`text-md font-bold ${isLiked ? likedTextColor : dislikedTextColor} mt-1`}>{choice}</p>
+            </div>
+          );
+        })}
       </div>
     );
   };
@@ -125,18 +134,14 @@ function PreferenceList({ title, preferences, choicesMap }) {
   return (
     <div className="bg-neutral-100/70 p-4 rounded-lg border border-neutral-200/80">
       <h4 className="font-bold text-md text-neutral-600 mb-3 pl-2">{title}</h4>
-      <div className="space-y-3">
-        <div className="flex items-start">
-          <span className="text-red-500 font-bold text-lg mr-3 mt-1">❤️</span>
-          <div className="flex flex-col gap-y-2">
-            {preferences.liked.map(id => <PreferenceRow key={id} choiceId={id} isLiked={true} />)}
-          </div>
+      <div className="space-y-4">
+        <div className="flex items-center">
+          <span className="text-red-500 text-2xl mr-4">❤️</span>
+          <PreferenceItems ids={preferences.liked} isLiked={true} />
         </div>
-        <div className="flex items-start">
-          <span className="text-yellow-500 font-bold text-lg mr-3 mt-1">💛</span>
-          <div className="flex flex-col gap-y-2">
-            {preferences.disliked.map(id => <PreferenceRow key={id} choiceId={id} isLiked={false} />)}
-          </div>
+        <div className="flex items-center">
+          <span className="text-yellow-500 text-2xl mr-4">💛</span>
+          <PreferenceItems ids={preferences.disliked} isLiked={false} />
         </div>
       </div>
     </div>
@@ -239,12 +244,10 @@ export default function App() {
   return (
     <div className="bg-neutral-50 min-h-screen text-neutral-800 font-sans">
       <div className="container mx-auto max-w-3xl p-4">
-        {/* UPDATED: Header with dynamic classes for mobile UX */}
         <header className={`transition-all duration-300 ease-in-out text-center ${isInteracting ? 'h-0 opacity-0 my-0 overflow-hidden' : 'my-4'}`}>
             <h1 className="text-3xl font-bold text-sky-600">에버소울 나들이 가이드</h1>
         </header>
         <main>
-          {/* UPDATED: Responsive sticky positioning */}
           <div className={`space-y-4 p-4 bg-white/60 backdrop-blur-lg md:sticky top-4 z-10 rounded-xl shadow-sm border border-neutral-200`}>
             <SearchBar 
                 searchTerm={searchTerm} 
@@ -290,7 +293,7 @@ export default function App() {
           bg-orange-600 border-orange-500 text-orange-600 text-orange-700
           bg-emerald-600 border-emerald-500 text-emerald-600 text-emerald-700
           bg-indigo-600 border-indigo-500 text-indigo-600 text-indigo-700
-          bg-violet-600 border-violet-500 text-violet-600 text-violet-700
+          bg-fuchsia-600 border-fuchsia-500 text-fuchsia-600 text-fuchsia-700
           bg-neutral-600 border-neutral-500 text-neutral-600 text-neutral-700
         */
       `}</style>
