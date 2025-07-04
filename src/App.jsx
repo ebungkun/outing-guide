@@ -54,7 +54,7 @@ function FormattedCharacterName({ name, context, colorClass = 'text-sky-600' }) 
   return <span>{name}</span>;
 }
 
-function SearchBar({ searchTerm, setSearchTerm }) {
+function SearchBar({ searchTerm, setSearchTerm, onFocus }) {
   return (
     <div className="relative w-full">
       <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -63,13 +63,13 @@ function SearchBar({ searchTerm, setSearchTerm }) {
         placeholder="정령 이름 검색 (초성 지원)"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        onFocus={onFocus}
         className="w-full px-4 py-3 pl-10 bg-white border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 transition-shadow"
       />
     </div>
   );
 }
 
-// UPDATED: TypeFilter component with simplified and corrected styling
 function TypeFilter({ types, selectedType, setSelectedType }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -77,7 +77,6 @@ function TypeFilter({ types, selectedType, setSelectedType }) {
         const color = typeColors[type] || 'neutral';
         const isSelected = selectedType === type;
 
-        // Define classes based on state for clarity
         const baseClasses = "px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 border-2";
         const selectedClasses = `bg-white text-${color}-600 border-${color}-500 scale-105 shadow-md`;
         const unselectedClasses = `bg-white text-neutral-700 border-neutral-300 hover:text-${color}-600 hover:border-${color}-500`;
@@ -194,6 +193,7 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('전체');
   const [selectedCharacter, setSelectedCharacter] = useState(null);
+  const [isInteracting, setIsInteracting] = useState(false);
 
   const { mapping_tables, character_preferences } = characterData;
   
@@ -212,21 +212,45 @@ export default function App() {
       .filter(char => matchesSearch(char.character_name, searchTerm));
   }, [searchTerm, selectedType, allCharacters]);
 
-  useEffect(() => { setSelectedCharacter(null); }, [searchTerm, selectedType]);
-  useEffect(() => { if (filteredCharacters.length === 1) { setSelectedCharacter(filteredCharacters[0]); } }, [filteredCharacters]);
+  useEffect(() => {
+    setSelectedCharacter(null);
+    if(searchTerm || selectedType !== '전체') {
+      setIsInteracting(true);
+    }
+  }, [searchTerm, selectedType]);
+  
+  useEffect(() => { 
+      if (filteredCharacters.length === 1) { 
+          setSelectedCharacter(filteredCharacters[0]); 
+      } 
+  }, [filteredCharacters]);
 
-  const handleSelectCharacter = (character) => { setSelectedCharacter(character); };
-  const handleClearSelection = () => { setSelectedCharacter(null); }
+  const handleSelectCharacter = (character) => { 
+      setSelectedCharacter(character); 
+      setIsInteracting(true);
+  };
+  const handleClearSelection = () => { 
+      setSelectedCharacter(null); 
+      setSearchTerm('');
+      setSelectedType('전체');
+      setIsInteracting(false);
+  }
 
   return (
     <div className="bg-neutral-50 min-h-screen text-neutral-800 font-sans">
       <div className="container mx-auto max-w-3xl p-4">
-        <header className="my-8 text-center">
-            <h1 className="text-4xl font-bold text-sky-600">에버소울 나들이 가이드</h1>
+        {/* UPDATED: Header with dynamic classes for mobile UX */}
+        <header className={`transition-all duration-300 ease-in-out text-center ${isInteracting ? 'h-0 opacity-0 my-0 overflow-hidden' : 'my-4'}`}>
+            <h1 className="text-3xl font-bold text-sky-600">에버소울 나들이 가이드</h1>
         </header>
         <main>
-          <div className="space-y-4 p-4 bg-white/60 backdrop-blur-lg sticky top-4 z-10 rounded-xl shadow-sm border border-neutral-200">
-            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          {/* UPDATED: Responsive sticky positioning */}
+          <div className={`space-y-4 p-4 bg-white/60 backdrop-blur-lg md:sticky top-4 z-10 rounded-xl shadow-sm border border-neutral-200`}>
+            <SearchBar 
+                searchTerm={searchTerm} 
+                setSearchTerm={setSearchTerm}
+                onFocus={() => setIsInteracting(true)}
+            />
             <TypeFilter types={characterTypes} selectedType={selectedType} setSelectedType={setSelectedType} />
           </div>
           <div className="mt-8">
