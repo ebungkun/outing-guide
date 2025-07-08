@@ -1,0 +1,64 @@
+/*
+  Tailwind CSS v4 지시어
+  이 파일이 Tailwind의 빌드 시작점임을 나타냅니다.
+*/
+@import "tailwindcss";
+
+/*
+  동적 클래스 생성을 위한 안전 목록 (Safelisting)
+  App.jsx에서 color 변수를 사용하여 동적으로 클래스를 만드는 부분을 위해
+  Tailwind가 필요한 모든 클래스를 미리 생성하도록 합니다.
+  이 코드가 있으면 App.jsx의 JIT 컴파일러용 주석은 더 이상 필요 없습니다.
+*/
+
+/* 예: text-amber-600, hover:text-orange-600 등 */
+@source inline("{,hover:}text-{amber,orange,emerald,indigo,fuchsia,neutral}-{600,700}");
+
+/* 예: border-indigo-500, hover:border-fuchsia-500 등 */
+@source inline("{,hover:}border-{amber,orange,emerald,indigo,fuchsia,neutral}-500");
+
+/*
+  커스텀 스타일 및 애니메이션
+  App.jsx의 <style> 태그에 있던 내용을 이곳으로 옮겨 관리합니다.
+*/
+@layer base {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@font-face {
+  font-family: 'GyeonggiTitle';
+  src: url('./assets/fonts/Title_Light_subset.woff2') format('woff2');
+  font-weight: 300; 
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GyeonggiTitle';
+  src: url('./assets/fonts/Title_Medium_subset.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GyeonggiTitle';
+  src: url('./assets/fonts/Title_Bold_subset.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@theme {
+    --font-sans: GyeonggiTitle, sans-serif;
+}
