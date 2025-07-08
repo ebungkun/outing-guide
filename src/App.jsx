@@ -199,6 +199,9 @@ export default function App() {
   const [isInteracting, setIsInteracting] = useState(false);
   
   const cardRef = useRef(null);
+  const headerRef = useRef(null);
+  // [수정됨] 사라질 헤더의 높이를 임시 저장하는 ref
+  const disappearingHeaderHeight = useRef(0);
 
   const { mapping_tables, character_preferences } = characterData;
   
@@ -217,47 +220,62 @@ export default function App() {
       .filter(char => matchesSearch(char.character_name, searchTerm));
   }, [searchTerm, selectedType, allCharacters]);
 
+  const startInteraction = () => {
+    if (!isInteracting && headerRef.current) {
+      // [수정됨] 인터랙션이 처음 시작될 때, 사라질 헤더의 높이를 미리 저장
+      disappearingHeaderHeight.current = headerRef.current.offsetHeight;
+    } else {
+      disappearingHeaderHeight.current = 0;
+    }
+    setIsInteracting(true);
+  };
+
   useEffect(() => {
     setSelectedCharacter(null);
     if(searchTerm || selectedType !== '전체') {
-      setIsInteracting(true);
+      startInteraction();
     }
   }, [searchTerm, selectedType]);
   
   useEffect(() => { 
       if (filteredCharacters.length === 1) { 
+          startInteraction();
           setSelectedCharacter(filteredCharacters[0]);
-          setIsInteracting(true); 
       } 
   }, [filteredCharacters]);
 
-  // [수정됨] requestAnimationFrame 로직 제거
   useEffect(() => {
     if (selectedCharacter && cardRef.current) {
-      let topMargin = 16; 
+      // [수정됨] 지연 없이 즉시 스크롤 계산
+      if (cardRef.current) {
+        let topMargin = 16; 
 
-      if (window.innerWidth >= 768) {
-        const stickyHeaderElement = document.querySelector('.md\\:sticky');
-        if (stickyHeaderElement) {
-          topMargin = stickyHeaderElement.offsetHeight + 16;
+        if (window.innerWidth >= 768) {
+          const stickyHeaderElement = document.querySelector('.md\\:sticky');
+          if (stickyHeaderElement) {
+            topMargin = stickyHeaderElement.offsetHeight + 16;
+          }
         }
+
+        const elementPosition = cardRef.current.getBoundingClientRect().top;
+        let offsetPosition = elementPosition + window.scrollY - topMargin;
+
+        // [수정됨] 미리 저장해둔 헤더 높이만큼 스크롤 위치 보정
+        if (disappearingHeaderHeight.current > 0) {
+          offsetPosition -= disappearingHeaderHeight.current;
+        }
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
       }
-
-      const elementPosition = cardRef.current.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - topMargin;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
     }
   }, [selectedCharacter]);
 
   const handleSelectCharacter = (character) => { 
-      setIsInteracting(true);
-      setTimeout(() => {
-          setSelectedCharacter(character);
-      }, 0);
+      startInteraction();
+      setSelectedCharacter(character);
   };
 
   const handleClearSelection = () => { 
@@ -270,7 +288,7 @@ export default function App() {
   return (
     <div className="bg-neutral-50 min-h-screen text-neutral-800 font-sans">
       <div className="container mx-auto max-w-3xl p-4">
-        <header className={`transition-all duration-300 ease-in-out text-center ${isInteracting ? 'h-0 opacity-0 my-0 overflow-hidden' : 'my-4'}`}>
+        <header ref={headerRef} className={`transition-all duration-300 ease-in-out text-center ${isInteracting ? 'h-0 opacity-0 my-0 overflow-hidden' : 'my-4'}`}>
             <h1 className="text-3xl font-bold text-sky-600">에버소울 나들이 가이드</h1>
         </header>
         <main>
@@ -278,7 +296,7 @@ export default function App() {
             <SearchBar 
                 searchTerm={searchTerm} 
                 setSearchTerm={setSearchTerm}
-                onFocus={() => setIsInteracting(true)}
+                onFocus={startInteraction}
             />
             <TypeFilter types={characterTypes} selectedType={selectedType} setSelectedType={setSelectedType} />
           </div>
