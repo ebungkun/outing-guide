@@ -226,47 +226,40 @@ export default function App() {
   
   useEffect(() => { 
       if (filteredCharacters.length === 1) { 
-          setSelectedCharacter(filteredCharacters[0]); 
+          setSelectedCharacter(filteredCharacters[0]);
+          setIsInteracting(true); 
       } 
   }, [filteredCharacters]);
 
-  // [수정됨] 스크롤 로직 전체 변경
+  // [수정됨] requestAnimationFrame 로직 제거
   useEffect(() => {
     if (selectedCharacter && cardRef.current) {
-      // requestAnimationFrame을 사용하여 브라우저가 렌더링을 마친 후 위치를 계산하도록 합니다.
-      const animationFrameId = requestAnimationFrame(() => {
-        // 모바일에서는 화면 상단에서 16px(p-4) 여백을 줌
-        let topMargin = 16; 
+      let topMargin = 16; 
 
-        // 데스크탑 (화면 너비 768px 이상)에서는 sticky 헤더를 고려
-        if (window.innerWidth >= 768) {
-          const stickyHeaderElement = document.querySelector('.md\\:sticky');
-          if (stickyHeaderElement) {
-            // sticky 헤더 높이 + 16px 추가 여백
-            topMargin = stickyHeaderElement.offsetHeight + 16;
-          }
+      if (window.innerWidth >= 768) {
+        const stickyHeaderElement = document.querySelector('.md\\:sticky');
+        if (stickyHeaderElement) {
+          topMargin = stickyHeaderElement.offsetHeight + 16;
         }
+      }
 
-        if (cardRef.current) {
-            const elementPosition = cardRef.current.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.scrollY - topMargin;
+      const elementPosition = cardRef.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - topMargin;
 
-            window.scrollTo({
-              top: offsetPosition,
-              behavior: 'smooth'
-            });
-        }
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
       });
-
-      // 클린업 함수: 컴포넌트가 언마운트되거나 이펙트가 다시 실행되기 전에 프레임 요청을 취소합니다.
-      return () => cancelAnimationFrame(animationFrameId);
     }
   }, [selectedCharacter]);
 
   const handleSelectCharacter = (character) => { 
-      setSelectedCharacter(character); 
       setIsInteracting(true);
+      setTimeout(() => {
+          setSelectedCharacter(character);
+      }, 0);
   };
+
   const handleClearSelection = () => { 
       setSelectedCharacter(null); 
       setSearchTerm('');
