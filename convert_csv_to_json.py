@@ -53,9 +53,6 @@ def convert_csv_to_final_json_corrected(csv_path, output_path):
     }
     
     # --- 2. Create a Context-Aware Lookup Table ---
-    # This nested dictionary stores IDs based on both choice text and time context.
-    # Structure: { "choice_text": { "context": id } }
-    # Example: { "성벽 산책로": { "day": 207, "night": 305 } }
     context_aware_map = defaultdict(dict)
     for id_str, details in MAPPING_TABLES["choices"].items():
         choice_text = details["choice"]
@@ -68,7 +65,7 @@ def convert_csv_to_final_json_corrected(csv_path, output_path):
         elif 300 <= choice_id < 400:
             context = "night"
         else:
-            continue # Skip if ID is out of expected ranges
+            continue
 
         context_aware_map[choice_text][context] = choice_id
 
@@ -79,7 +76,6 @@ def convert_csv_to_final_json_corrected(csv_path, output_path):
         # --- 4. Process the DataFrame to build the desired structure ---
         grouped_preferences = defaultdict(list)
         
-        # Define column mappings for clarity
         preference_columns = {
             'common_liked': ('common', ['커먼 선호 1', '커먼 선호 2']),
             'common_disliked': ('common', ['커먼 비선호']),
@@ -89,14 +85,12 @@ def convert_csv_to_final_json_corrected(csv_path, output_path):
             'rare_night_disliked': ('night', ['밤 레어 비선호'])
         }
 
-        # Helper function to get ID from text using the context-aware map
         def get_id_with_context(choice_text, context):
             if pd.notna(choice_text):
                 cleaned_text = str(choice_text).strip()
                 if cleaned_text in context_aware_map and context in context_aware_map[cleaned_text]:
                     return context_aware_map[cleaned_text][context]
                 else:
-                    # Print a warning if a choice text is not found for the given context
                     print(f"Warning: Choice '{cleaned_text}' for context '{context}' not in mapping table. Skipping.")
             return None
 
@@ -110,10 +104,9 @@ def convert_csv_to_final_json_corrected(csv_path, output_path):
                 "rare_night": {"liked": [], "disliked": []}
             }
 
-            # Populate preferences using the column mappings and the new context-aware getter
             for key, (context, columns) in preference_columns.items():
-                category, pref_type = key.split('_', 1) # e.g., 'common', 'liked'
-                if len(pref_type.split('_')) > 1: # rare_day_liked -> 'rare_day', 'liked'
+                category, pref_type = key.split('_', 1)
+                if len(pref_type.split('_')) > 1:
                     category = f"{category}_{pref_type.split('_')[0]}"
                     pref_type = pref_type.split('_')[1]
                 
@@ -124,6 +117,11 @@ def convert_csv_to_final_json_corrected(csv_path, output_path):
                 "character_name": character_name,
                 "preferences": preferences
             }
+            
+            # [MODIFIED] Add the URL to character_data if the 'url' column exists and has a value.
+            # [수정됨] 'url' 컬럼이 존재하고 값이 있는 경우, character_data에 URL을 추가합니다.
+            if 'url' in row and pd.notna(row['url']):
+                character_data['url'] = row['url']
             
             grouped_preferences[character_type].append(character_data)
 
@@ -148,15 +146,6 @@ def convert_csv_to_final_json_corrected(csv_path, output_path):
 
 
 if __name__ == '__main__':
-    # Define the input CSV file path
-    # You should have 'merged_data.csv' in the same directory.
     input_csv_file = 'merged_data.csv'
-    
-    # Define the output JSON file path
     output_json_file = 'preferences.json'
-    
-    # To run this script, you need to install pandas:
-    # pip install pandas
-    
-    # Execute the conversion function
     convert_csv_to_final_json_corrected(input_csv_file, output_json_file)

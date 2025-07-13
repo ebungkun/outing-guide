@@ -146,17 +146,38 @@ function PreferenceList({ title, preferences, choicesMap }) {
   );
 }
 
+// [MODIFIED] CharacterCard component to display the source URL.
+// [수정됨] 출처 URL을 표시하도록 CharacterCard 컴포넌트를 수정했습니다.
 function CharacterCard({ character, choicesMap, onClear }) {
-  const { character_name, preferences, type } = character;
+  const { character_name, preferences, type, url } = character; // Destructure url from character prop
   const color = typeColors[type] || 'sky';
   const borderColorClass = `border-${color}-500`;
   const textColorClass = `text-${color}-700`;
 
   return (
     <div className={`bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-6 border-2 ${borderColorClass} animate-fade-in`}>
-       <div className="flex justify-between items-center">
-        <FormattedCharacterName name={character_name} context="cardTitle" colorClass={textColorClass} />
-        <button onClick={onClear} className="text-neutral-500 hover:text-neutral-800 transition-colors">
+       <div className="flex justify-between items-start">
+        {/* Left side: Title and Source Link */}
+        <div>
+          <FormattedCharacterName name={character_name} context="cardTitle" colorClass={textColorClass} />
+          {/* Source Link: Render only if URL exists */}
+          {url && (
+            <div className="mt-2">
+              <a 
+                href={url} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="inline-flex items-center text-sm text-neutral-500 hover:text-sky-600 transition-colors group"
+              >
+                <span className="mr-1.5">출처:</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-link group-hover:animate-pulse"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"/></svg>
+              </a>
+            </div>
+          )}
+        </div>
+        
+        {/* Right side: Close Button */}
+        <button onClick={onClear} className="text-neutral-500 hover:text-neutral-800 transition-colors flex-shrink-0 ml-4">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
        </div>
@@ -200,7 +221,6 @@ export default function App() {
   
   const cardRef = useRef(null);
   const headerRef = useRef(null);
-  // [수정됨] 사라질 헤더의 높이를 임시 저장하는 ref
   const disappearingHeaderHeight = useRef(0);
 
   const { mapping_tables, character_preferences } = characterData;
@@ -222,7 +242,6 @@ export default function App() {
 
   const startInteraction = () => {
     if (!isInteracting && headerRef.current) {
-      // [수정됨] 인터랙션이 처음 시작될 때, 사라질 헤더의 높이를 미리 저장
       disappearingHeaderHeight.current = headerRef.current.offsetHeight;
     } else {
       disappearingHeaderHeight.current = 0;
@@ -246,7 +265,6 @@ export default function App() {
 
   useEffect(() => {
     if (selectedCharacter && cardRef.current) {
-      // [수정됨] 지연 없이 즉시 스크롤 계산
       if (cardRef.current) {
         let topMargin = 16; 
 
@@ -260,7 +278,6 @@ export default function App() {
         const elementPosition = cardRef.current.getBoundingClientRect().top;
         let offsetPosition = elementPosition + window.scrollY - topMargin;
 
-        // [수정됨] 미리 저장해둔 헤더 높이만큼 스크롤 위치 보정
         if (disappearingHeaderHeight.current > 0) {
           offsetPosition -= disappearingHeaderHeight.current;
         }
