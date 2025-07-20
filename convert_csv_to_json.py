@@ -146,6 +146,6 @@ def convert_csv_to_final_json_corrected(csv_path, output_path):
 
 
 if __name__ == '__main__':
-    input_csv_file = 'merged_data.csv'
-    output_json_file = 'preferences.json'
+    input_csv_file = 'data.csv'
+    output_json_file = 'src/data/preferences.json'
     convert_csv_to_final_json_corrected(input_csv_file, output_json_file)
