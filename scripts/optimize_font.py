@@ -69,7 +69,7 @@ def process_font_file(font_path, subset_text, output_dir):
         options.layout_features = ['*']
         options.glyph_names = True
         options.recalc_bounds = True
-        options.recalc_timestamp = True
+        options.recalc_timestamp = False
         options.notdef_outline = True
 
         subsetter = Subsetter(options)
