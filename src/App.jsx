@@ -305,7 +305,7 @@ export default function App() {
   return (
     <div className="bg-neutral-50 min-h-screen text-neutral-800 font-sans">
       <div className="container mx-auto max-w-3xl p-4">
-        <header ref={headerRef} className={`transition-all duration-300 ease-in-out text-center ${isInteracting ? 'h-0 opacity-0 my-0 overflow-hidden' : 'my-4'}`}>
+        <header ref={headerRef} className={`text-center ${isInteracting ? 'h-0 opacity-0 my-0 overflow-hidden' : 'my-4'}`}>
             <h1 className="text-3xl font-bold text-sky-600">에버소울 나들이 가이드</h1>
         </header>
         <main>

@@ -1,8 +1,9 @@
-/*
-  Tailwind CSS v4 지시어
-  이 파일이 Tailwind의 빌드 시작점임을 나타냅니다.
-*/
 @import "tailwindcss";
+
+/* 스크롤바 항상 표시하여 레이아웃 떨림 방지 */
+html {
+  overflow-y: scroll;
+}
 
 /*
   동적 클래스 생성을 위한 안전 목록 (Safelisting)
