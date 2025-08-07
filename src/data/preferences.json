@@ -1679,6 +1679,39 @@
           }
         },
         "url": "https://arca.live/b/eversoul/138178659"
+      },
+      {
+        "character_name": "미리암(잔영)",
+        "preferences": {
+          "common": {
+            "liked": [
+              109,
+              105
+            ],
+            "disliked": [
+              106
+            ]
+          },
+          "rare_day": {
+            "liked": [
+              205,
+              208
+            ],
+            "disliked": [
+              202
+            ]
+          },
+          "rare_night": {
+            "liked": [
+              301,
+              305
+            ],
+            "disliked": [
+              307
+            ]
+          }
+        },
+        "url": "https://arca.live/b/eversoul/144498889"
       }
     ],
     "인간형": [
