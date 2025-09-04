@@ -619,6 +619,39 @@
           }
         },
         "url": "https://arca.live/b/eversoul/127027098"
+      },
+      {
+        "character_name": "페트라(각혼)",
+        "preferences": {
+          "common": {
+            "liked": [
+              108,
+              110
+            ],
+            "disliked": [
+              104
+            ]
+          },
+          "rare_day": {
+            "liked": [
+              209,
+              208
+            ],
+            "disliked": [
+              206
+            ]
+          },
+          "rare_night": {
+            "liked": [
+              303,
+              307
+            ],
+            "disliked": [
+              308
+            ]
+          }
+        },
+        "url": "https://arca.live/b/eversoul/146992090"
       }
     ],
     "야수형": [
