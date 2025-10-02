@@ -2739,6 +2739,39 @@
           }
         },
         "url": "https://arca.live/b/eversoul/141953563"
+      },
+      {
+        "character_name": "카넬리아",
+        "preferences": {
+          "common": {
+            "liked": [
+              108,
+              105
+            ],
+            "disliked": [
+              106
+            ]
+          },
+          "rare_day": {
+            "liked": [
+              210,
+              205
+            ],
+            "disliked": [
+              202
+            ]
+          },
+          "rare_night": {
+            "liked": [
+              309,
+              302
+            ],
+            "disliked": [
+              305
+            ]
+          }
+        },
+        "url": "https://arca.live/b/eversoul/149504673"
       }
     ]
   }
