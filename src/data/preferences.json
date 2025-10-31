@@ -652,6 +652,38 @@
           }
         },
         "url": "https://arca.live/b/eversoul/146992090"
+      },
+      {
+        "character_name": "가넷(열락)",
+        "preferences": {
+          "common": {
+            "liked": [
+              108,
+              102
+            ],
+            "disliked": [
+              103
+            ]
+          },
+          "rare_day": {
+            "liked": [
+              206
+            ],
+            "disliked": [
+              210
+            ]
+          },
+          "rare_night": {
+            "liked": [
+              303,
+              306
+            ],
+            "disliked": [
+              309
+            ]
+          }
+        },
+        "url": "https://arca.live/b/eversoul/152180999"
       }
     ],
     "야수형": [
