@@ -2308,6 +2308,39 @@
           }
         },
         "url": "https://arca.live/b/eversoul/134221354"
+      },
+      {
+        "character_name": "셰리(낭만)",
+        "preferences": {
+          "common": {
+            "liked": [
+              110,
+              101
+            ],
+            "disliked": [
+              108
+            ]
+          },
+          "rare_day": {
+            "liked": [
+              210,
+              205
+            ],
+            "disliked": [
+              206
+            ]
+          },
+          "rare_night": {
+            "liked": [
+              308,
+              305
+            ],
+            "disliked": [
+              301
+            ]
+          }
+        },
+        "url": "https://arca.live/b/eversoul/155075327"
       }
     ],
     "천악혼": [
