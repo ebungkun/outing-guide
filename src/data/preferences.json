@@ -2838,6 +2838,39 @@
           }
         },
         "url": "https://arca.live/b/eversoul/149504673"
+      },
+      {
+        "character_name": "클라우디아(대천사)",
+        "preferences": {
+          "common": {
+            "liked": [
+              102,
+              108
+            ],
+            "disliked": [
+              101
+            ]
+          },
+          "rare_day": {
+            "liked": [
+              210,
+              204
+            ],
+            "disliked": [
+              202
+            ]
+          },
+          "rare_night": {
+            "liked": [
+              309,
+              302
+            ],
+            "disliked": [
+              306
+            ]
+          }
+        },
+        "url": "https://arca.live/b/eversoul/157777971"
       }
     ]
   }
