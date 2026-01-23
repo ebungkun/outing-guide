@@ -2871,6 +2871,39 @@
           }
         },
         "url": "https://arca.live/b/eversoul/157777971"
+      },
+      {
+        "character_name": "유리아(아폴리온)",
+        "preferences": {
+          "common": {
+            "liked": [
+              108,
+              109
+            ],
+            "disliked": [
+              102
+            ]
+          },
+          "rare_day": {
+            "liked": [
+              209,
+              206
+            ],
+            "disliked": [
+              208
+            ]
+          },
+          "rare_night": {
+            "liked": [
+              302,
+              307
+            ],
+            "disliked": [
+              306
+            ]
+          }
+        },
+        "url": "https://arca.live/b/eversoul/160281056"
       }
     ]
   }
